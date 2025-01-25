@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Weather App</title>
+</head>
+<body>
+    <h1>Weather App</h1>
+    <input type="text" id="cityInput" placeholder="Enter city name" />
+    <button onclick="getWeather()">Get Weather</button>
+    
+    <div id="weatherResult"></div>
+
+    <script>
+        async function getWeather() {
+            const apiKey = '7b5d6e35a56bcb40c797ae963991b22b'; // Replace with your OpenWeatherMap API key
+            const city = document.getElementById('cityInput').value;
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (response.ok) {
+                    // If the response is OK, display weather data
+                    document.getElementById('weatherResult').innerHTML = `
+                        <h3>Weather in ${data.name}</h3>
+                        <p>Temperature: ${data.main.temp} °C</p>
+                        <p>Description: ${data.weather[0].description}</p>
+                    `;
+                } else {
+                    // If there is an error in the response
+                    document.getElementById('weatherResult').innerHTML = `<p>Error: ${data.message}</p>`;
+                }
+            } catch (error) {
+                // If there is an error while fetching data
+                document.getElementById('weatherResult').innerHTML = '<p>Error fetching weather data. Please try again later.</p>';
+                console.error('Error fetching weather data:', error);
+            }
+        }
+    </script>
+</body>
+</html>
